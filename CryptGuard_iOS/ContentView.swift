@@ -8,9 +8,24 @@ import SwiftUI
 struct ContentView: View {
 var body: some View {
     NavigationView {
-        List(options) { option in
-                OptionsRow(option: option)
+        List() {
+            NavigationLink(
+                destination: PasswordsList()) {
+                OptionsRow(option: options[0])
             }
+            NavigationLink(
+                destination: PasswordsList()) {
+                OptionsRow(option: options[1])
+            }
+            NavigationLink(
+                destination: PasswordsList()) {
+                OptionsRow(option: options[2])
+            }
+            NavigationLink(
+                destination: PasswordsList()) {
+                OptionsRow(option: options[3])
+            }
+        }
         .foregroundColor(Color(UIColor(named: "charleston_green") ?? .black))
         .navigationBarTitle("CryptGuard")
         }
@@ -27,13 +42,13 @@ struct OptionsRow: View {
     let option: Option
     
     var body: some View {
-        HStack(spacing: 7, content: {
+        HStack(spacing: 15, content: {
             Image(option.iconName)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 40, height: 40, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                 .cornerRadius(50)
-            VStack(alignment: .leading, content: {
+            VStack(alignment: .leading, spacing: 3, content: {
                 Text(option.title)
                     .font(.system(size: 21, weight: .medium, design: .default))
                 Text(option.description)
