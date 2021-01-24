@@ -16,6 +16,7 @@
 		C826573725B8F8C200B403A6 /* MenuOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = C826573625B8F8C200B403A6 /* MenuOption.swift */; };
 		C826C84B25BCEF4A00D718A7 /* PasswordGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C826C84A25BCEF4A00D718A7 /* PasswordGenerator.swift */; };
 		C826C84E25BCF54500D718A7 /* Encrypter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C826C84D25BCF54500D718A7 /* Encrypter.swift */; };
+		C826C85125BCF99200D718A7 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = C826C85025BCF99200D718A7 /* Database.swift */; };
 		C8F09F3125BA2F44007F3B06 /* PasswordsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F09F3025BA2F44007F3B06 /* PasswordsList.swift */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +32,7 @@
 		C826573625B8F8C200B403A6 /* MenuOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuOption.swift; sourceTree = "<group>"; };
 		C826C84A25BCEF4A00D718A7 /* PasswordGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGenerator.swift; sourceTree = "<group>"; };
 		C826C84D25BCF54500D718A7 /* Encrypter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encrypter.swift; sourceTree = "<group>"; };
+		C826C85025BCF99200D718A7 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		C8F09F3025BA2F44007F3B06 /* PasswordsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordsList.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -92,6 +94,7 @@
 				C826573625B8F8C200B403A6 /* MenuOption.swift */,
 				C826C84A25BCEF4A00D718A7 /* PasswordGenerator.swift */,
 				C826C84D25BCF54500D718A7 /* Encrypter.swift */,
+				C826C85025BCF99200D718A7 /* Database.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -186,6 +189,7 @@
 				C8263A9625BA36D300498258 /* PasswordsDetail.swift in Sources */,
 				C826573725B8F8C200B403A6 /* MenuOption.swift in Sources */,
 				C826572725B8E44000B403A6 /* CryptGuard_iOSApp.swift in Sources */,
+				C826C85125BCF99200D718A7 /* Database.swift in Sources */,
 				C826C84E25BCF54500D718A7 /* Encrypter.swift in Sources */,
 				C826C84B25BCEF4A00D718A7 /* PasswordGenerator.swift in Sources */,
 			);

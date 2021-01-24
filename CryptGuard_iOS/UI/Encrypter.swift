@@ -2,8 +2,7 @@
 //  Encrypter.swift
 //  CryptGuard_iOS
 //
-//  Created by bababoey on 24/01/2021.
-//
+
 
 import SwiftUI
 
