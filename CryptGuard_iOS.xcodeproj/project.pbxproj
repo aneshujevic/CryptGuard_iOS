@@ -14,6 +14,7 @@
 		C826572B25B8E44900B403A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C826572A25B8E44900B403A6 /* Assets.xcassets */; };
 		C826572E25B8E44900B403A6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C826572D25B8E44900B403A6 /* Preview Assets.xcassets */; };
 		C826573725B8F8C200B403A6 /* MenuOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = C826573625B8F8C200B403A6 /* MenuOption.swift */; };
+		C826C84B25BCEF4A00D718A7 /* PasswordGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C826C84A25BCEF4A00D718A7 /* PasswordGenerator.swift */; };
 		C8F09F3125BA2F44007F3B06 /* PasswordsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F09F3025BA2F44007F3B06 /* PasswordsList.swift */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +28,7 @@
 		C826572D25B8E44900B403A6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		C826572F25B8E44900B403A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C826573625B8F8C200B403A6 /* MenuOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuOption.swift; sourceTree = "<group>"; };
+		C826C84A25BCEF4A00D718A7 /* PasswordGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGenerator.swift; sourceTree = "<group>"; };
 		C8F09F3025BA2F44007F3B06 /* PasswordsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordsList.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -86,6 +88,7 @@
 				C8263A9525BA36D300498258 /* PasswordsDetail.swift */,
 				C8F09F3025BA2F44007F3B06 /* PasswordsList.swift */,
 				C826573625B8F8C200B403A6 /* MenuOption.swift */,
+				C826C84A25BCEF4A00D718A7 /* PasswordGenerator.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -180,6 +183,7 @@
 				C8263A9625BA36D300498258 /* PasswordsDetail.swift in Sources */,
 				C826573725B8F8C200B403A6 /* MenuOption.swift in Sources */,
 				C826572725B8E44000B403A6 /* CryptGuard_iOSApp.swift in Sources */,
+				C826C84B25BCEF4A00D718A7 /* PasswordGenerator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

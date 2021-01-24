@@ -28,7 +28,6 @@ struct PasswordsDetail: View {
                     TextField("Password", text: $password)
                     TextField("Additional data", text: $additionalData)
                 }
-                
                 Section {
                     Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
                         Text("Save password data")
