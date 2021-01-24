@@ -9,7 +9,7 @@ import SwiftUI
 struct PasswordGenerator: View {
     
     @State private var length: String = "32"
-    @State private var generatedPassword: String = "Generated password will show here"
+    @State private var generatedPassword: String = ""
     
     var body: some View {
         VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 15, content: {
@@ -23,7 +23,7 @@ struct PasswordGenerator: View {
                 .shadow(radius: 3)
             Form {
                 Section {
-                    TextField("", text: $length)
+                    TextField("Length of password", text: $length)
                         .multilineTextAlignment(.center)
                     Text("Enter the desired length of the password")
                         .font(.callout)
@@ -31,7 +31,7 @@ struct PasswordGenerator: View {
                         .multilineTextAlignment(.center)
                 }
                 Section {
-                    TextField("", text: $generatedPassword)
+                    TextField("Generated password will show here", text: $generatedPassword)
                 }
                 
                 Section {
