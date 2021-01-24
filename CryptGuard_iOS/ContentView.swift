@@ -10,20 +10,24 @@ var body: some View {
     NavigationView {
         List() {
             NavigationLink(
-                destination: PasswordsList()) {
-                OptionsRow(option: options[0])
+                destination: PasswordsListScreen()) {
+                OptionsRow(option: menuOptions[0])
             }
             NavigationLink(
-                destination: PasswordsList()) {
-                OptionsRow(option: options[1])
+                destination: DatabaseScreen()) {
+                OptionsRow(option: menuOptions[1])
             }
             NavigationLink(
-                destination: PasswordsList()) {
-                OptionsRow(option: options[2])
+                destination: EncrypterScreen()) {
+                OptionsRow(option: menuOptions[2])
             }
             NavigationLink(
-                destination: PasswordsList()) {
-                OptionsRow(option: options[3])
+                destination: PasswordGeneratorScreen()) {
+                OptionsRow(option: menuOptions[3])
+            }
+            NavigationLink(
+                destination: OnlineAccountScreen()) {
+                OptionsRow(option: menuOptions[4])
             }
         }
         .foregroundColor(Color(UIColor(named: "charleston_green") ?? .black))

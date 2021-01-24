@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-struct PasswordGenerator: View {
+struct PasswordGeneratorScreen: View {
     
     @State private var length: String = "32"
     @State private var generatedPassword: String = ""
@@ -15,12 +15,14 @@ struct PasswordGenerator: View {
         VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 15, content: {
             Text("Password generator")
                     .font(.title)
+            
             Image("dice")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 150, height: 150, alignment: .center)
                 .clipped()
                 .shadow(radius: 3)
+            
             Form {
                 Section {
                     TextField("Length of password", text: $length)
@@ -32,6 +34,7 @@ struct PasswordGenerator: View {
                 }
                 Section {
                     TextField("Generated password will show here", text: $generatedPassword)
+                        .multilineTextAlignment(.center)
                 }
                 
                 Section {
@@ -46,6 +49,6 @@ struct PasswordGenerator: View {
 
 struct PasswordGenerator_Previews: PreviewProvider {
     static var previews: some View {
-        PasswordGenerator()
+        PasswordGeneratorScreen()
     }
 }

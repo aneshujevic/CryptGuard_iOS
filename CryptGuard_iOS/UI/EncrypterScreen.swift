@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-struct Encrypter: View {
+struct EncrypterScreen: View {
     
     @State private var password: String = ""
     
@@ -14,18 +14,22 @@ struct Encrypter: View {
         VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 15, content: {
             Text("Encrypter")
                     .font(.title)
+            
             Image("lock_circle")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 150, height: 150, alignment: .center)
                 .clipped()
                 .shadow(radius: 3)
+            
             Text("Choose the file to be encrypted and enter the passphrase")
                 .font(.callout)
                 .multilineTextAlignment(.center)
+            
             Form {
                 Section {
                     TextField("Passphrase", text: $password)
+                        .multilineTextAlignment(.center)
                 }
 
                 Section {
@@ -43,6 +47,6 @@ struct Encrypter: View {
 
 struct Encrypter_Previews: PreviewProvider {
     static var previews: some View {
-        Encrypter()
+        EncrypterScreen()
     }
 }

@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-struct PasswordsList: View {
+struct PasswordsListScreen: View {
     var body: some View{
         VStack {
             Text("List of password data")
@@ -21,7 +21,7 @@ struct PasswordsList: View {
 
 struct PasswordsList_Previews: PreviewProvider {
     static var previews: some View {
-        PasswordsList()
+        PasswordsListScreen()
     }
 }
 
