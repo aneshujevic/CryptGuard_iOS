@@ -30,7 +30,7 @@ struct PasswordsListRow: View {
     let passwordData: PasswordData
     
     var body: some View {
-        NavigationLink(destination: PasswordsDetail(id: passwordData.dbId)) {
+        NavigationLink(destination: PasswordsDetail(id: passwordData.id)) {
             HStack(){
                 VStack(alignment: .leading, spacing: nil, content: {
                     Text(passwordData.siteName)

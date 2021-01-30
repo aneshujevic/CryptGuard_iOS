@@ -7,8 +7,7 @@
 import Foundation
 
 struct PasswordData: Identifiable {
-    let id = UUID()
-    let dbId: Int
+    let id: Int
     let siteName: String
     let username: String
     let email: String
@@ -17,6 +16,6 @@ struct PasswordData: Identifiable {
 }
 
 var passwordDataList = [
-    PasswordData(dbId: 1, siteName: "facebook", username: "username", email: "email@em.com", password: "21313", additionalData: "additional_data"),
-    PasswordData(dbId: 2, siteName: "facebook", username: "username", email: "email@em.com", password: "21313", additionalData: "additional_data"),
-    PasswordData(dbId: 3, siteName: "facebook", username: "username", email: "email@em.com", password: "21313", additionalData: "additional_data"),]
+    PasswordData(id: 1, siteName: "facebook", username: "username", email: "email@em.com", password: "21313", additionalData: "additional_data"),
+    PasswordData(id: 2, siteName: "facebook", username: "username", email: "email@em.com", password: "21313", additionalData: "additional_data"),
+    PasswordData(id: 3, siteName: "facebook", username: "username", email: "email@em.com", password: "21313", additionalData: "additional_data"),]
