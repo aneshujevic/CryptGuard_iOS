@@ -3,7 +3,6 @@
 //  CryptGuard_iOS
 //
 
-
 import SwiftUI
 
 struct PasswordsDetail: View {
@@ -15,6 +14,9 @@ struct PasswordsDetail: View {
     @State private var email = passwordDataList[0].email
     @State private var password = passwordDataList[0].password
     @State private var additionalData = passwordDataList[0].additionalData
+    @State private var itemCopied = ""
+    @State private var itemCopiedBool = false
+    @State private var isSecuredPassword = false
     
     var body: some View {
         VStack {
@@ -24,11 +26,56 @@ struct PasswordsDetail: View {
             Form {
                 Section {
                     TextField("Site name", text: $siteName)
+                        .onLongPressGesture() {                           copyToClipboard(sourceItem: "Site name")
+                        }
+                    
                     TextField("Username", text: $username)
+                        .onLongPressGesture() {
+                            copyToClipboard(sourceItem: "Username")
+                        }
+                    
                     TextField("Email", text: $email)
-                    TextField("Password", text: $password)
+                        .onLongPressGesture() {
+                            copyToClipboard(sourceItem: "Email")
+                        }
+                    
+                    if !isSecuredPassword {
+                        HStack {
+                            TextField("Password", text: $password)
+                                .onTapGesture {
+                                    isSecuredPassword = true
+                                }
+                            Button(action: {
+                                copyToClipboard(sourceItem: "Password")
+                            }) {
+                                Image("article")
+                                    .renderingMode(.original)
+                            }
+                        }
+                    } else {
+                        HStack {
+                            SecureField("Password", text: $password)
+                                .onTapGesture {
+                                    isSecuredPassword = false
+                                }
+                            Button(action: {
+                                copyToClipboard(sourceItem: "Password")
+                            }) {
+                                Image("article")
+                                    .renderingMode(.original)
+                            }
+                        }
+                    }
+                    
                     TextField("Additional data", text: $additionalData)
+                        .onLongPressGesture() {
+                            copyToClipboard(sourceItem: "Additional data")
+                        }
                 }
+                
+                .alert(isPresented: $itemCopiedBool, content: {
+                    Alert(title: Text("Operation status"), message: Text(itemCopied + " successfully copied to clipboard"), dismissButton: .default(Text("OK")))
+                })
                 
                 Section {
                     Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
@@ -41,6 +88,34 @@ struct PasswordsDetail: View {
                 }
             }
         }
+    }
+    
+    func copyToClipboard(sourceItem: String) {
+        var value: String
+        
+        switch sourceItem {
+        case "Username":
+            value = username
+            break
+        case "Email":
+            value = email
+            break
+        case "Password":
+            value = password
+            break
+        case "Additional data":
+            value = additionalData
+            break
+        case "Site name":
+            value = siteName
+            break
+        default:
+            return
+        }
+        
+        UIPasteboard.general.string = value
+        itemCopied = sourceItem
+        itemCopiedBool = true
     }
 }
 

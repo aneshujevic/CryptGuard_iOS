@@ -31,6 +31,7 @@ struct PasswordGeneratorScreen: View {
                         .multilineTextAlignment(.center)
                         .keyboardType(/*@START_MENU_TOKEN@*/.numberPad/*@END_MENU_TOKEN@*/)
                         .border(lengthError == true ? Color.red : Color.white, width: 1)
+                    
                     Text("Enter the desired length of the password")
                         .font(.callout)
                         .foregroundColor(.gray)
