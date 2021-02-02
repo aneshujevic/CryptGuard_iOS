@@ -7,6 +7,7 @@ import SwiftUI
 
 struct PasswordsDetail: View {
     var shouldCreate = false
+    @Binding var passwordList: [PasswordData]?
 
     @State private var pdCurrent: PasswordData?
     @State private var siteName = ""
@@ -20,12 +21,13 @@ struct PasswordsDetail: View {
     @State private var alertCreatedShow = false
     @State private var alertDeletedShow = false
     
-    init(id: UUID?) {
+    init(id: UUID?, passwordList: Binding<[PasswordData]>) {
+        _passwordList = Binding(passwordList)
         if id == nil {
             shouldCreate = true
             pdCurrent = nil
         } else {
-            if let currPD = passwordDataList.first(where: {
+            if let currPD = passwordList.wrappedValue.first(where: {
                 $0.id.uuidString == id!.uuidString
             }) {
                 _pdCurrent = State(initialValue: currPD)
@@ -123,14 +125,16 @@ struct PasswordsDetail: View {
                     Button(action: {
                         if (shouldCreate) {
                             let pd = PasswordData(id: UUID(), siteName: siteName, username: username, email: email, password: password, additionalData: additionalData)
-                            passwordDataList.append(pd)
+                            passwordList?.append(pd)
                         } else {
-                            let pdIndex = passwordDataList.firstIndex(where: {$0.id == pdCurrent?.id})
+                            let pdIndex = passwordList?.firstIndex(where: {$0.id == pdCurrent?.id})
                             let pd = PasswordData(id: pdCurrent!.id, siteName: siteName, username: username, email: email, password: password, additionalData: additionalData)
-                            passwordDataList[pdIndex!] = pd
+                            passwordList?[pdIndex!] = pd
                         }
                         
-                        UserDefaults.standard.set(try? PropertyListEncoder().encode(passwordDataList), forKey: "pdlist")
+                        // TODO: add core data
+                        UserDefaults.standard.set(try! PropertyListEncoder().encode(passwordList), forKey: "pdlist")
+                        UserDefaults.standard.synchronize()
                         
                         alertCreatedShow = true
                     }, label: {
@@ -140,7 +144,11 @@ struct PasswordsDetail: View {
                             Alert(title: Text("Operation status"), message: Text("Password data successfully created."), dismissButton: .default(Text("OK")))})
                     
                     Button(action: {
-                        passwordDataList.remove(at: passwordDataList.firstIndex(where: {$0.id == pdCurrent?.id})!)
+                        passwordList?.remove(at: (passwordList?.firstIndex(where: {$0.id == pdCurrent?.id}))!)
+                        
+                        // TODO: add core data 
+                        UserDefaults.standard.set(try! PropertyListEncoder().encode(passwordList), forKey: "pdlist")
+                        UserDefaults.standard.synchronize()
                         
                         alertDeletedShow = true
                     }, label: {
@@ -184,7 +192,8 @@ struct PasswordsDetail: View {
 }
 
 struct PasswordsDetail_Previews: PreviewProvider {
+    @State static private var pl: [PasswordData] = []
     static var previews: some View {
-        PasswordsDetail(id: nil)
+        PasswordsDetail(id: nil, passwordList: $pl)
     }
 }

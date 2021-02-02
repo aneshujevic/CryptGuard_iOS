@@ -14,4 +14,4 @@ struct PasswordData: Identifiable, Encodable, Decodable {
     var additionalData: String?
 }
 
-var passwordDataList: [PasswordData] = []
+var passwordDataLista: [PasswordData] = []
