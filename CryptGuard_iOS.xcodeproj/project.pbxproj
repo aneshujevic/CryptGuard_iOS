@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		C8263A9625BA36D300498258 /* PasswordsDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8263A9525BA36D300498258 /* PasswordsDetail.swift */; };
-		C8263A9925BA37A800498258 /* PasswordData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8263A9825BA37A800498258 /* PasswordData.swift */; };
 		C826572725B8E44000B403A6 /* CryptGuard_iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C826572625B8E44000B403A6 /* CryptGuard_iOSApp.swift */; };
 		C826572925B8E44000B403A6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C826572825B8E44000B403A6 /* ContentView.swift */; };
 		C826572B25B8E44900B403A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C826572A25B8E44900B403A6 /* Assets.xcassets */; };
@@ -18,13 +17,13 @@
 		C826C84E25BCF54500D718A7 /* EncrypterScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C826C84D25BCF54500D718A7 /* EncrypterScreen.swift */; };
 		C826C85125BCF99200D718A7 /* DatabaseScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C826C85025BCF99200D718A7 /* DatabaseScreen.swift */; };
 		C826C85425BCFEC200D718A7 /* OnlineAccountScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C826C85325BCFEC200D718A7 /* OnlineAccountScreen.swift */; };
+		C831E6C925C8B05300E9B9A2 /* PasswordDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C831E6C825C8B05300E9B9A2 /* PasswordDataModel.swift */; };
 		C8BF399E25C5FFAF00654042 /* PasswordGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BF399D25C5FFAF00654042 /* PasswordGenerator.swift */; };
 		C8F09F3125BA2F44007F3B06 /* PasswordsListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F09F3025BA2F44007F3B06 /* PasswordsListScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		C8263A9525BA36D300498258 /* PasswordsDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordsDetail.swift; sourceTree = "<group>"; };
-		C8263A9825BA37A800498258 /* PasswordData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordData.swift; sourceTree = "<group>"; };
 		C826572325B8E44000B403A6 /* CryptGuard_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CryptGuard_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C826572625B8E44000B403A6 /* CryptGuard_iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptGuard_iOSApp.swift; sourceTree = "<group>"; };
 		C826572825B8E44000B403A6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -36,6 +35,7 @@
 		C826C84D25BCF54500D718A7 /* EncrypterScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncrypterScreen.swift; sourceTree = "<group>"; };
 		C826C85025BCF99200D718A7 /* DatabaseScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseScreen.swift; sourceTree = "<group>"; };
 		C826C85325BCFEC200D718A7 /* OnlineAccountScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlineAccountScreen.swift; sourceTree = "<group>"; };
+		C831E6C825C8B05300E9B9A2 /* PasswordDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PasswordDataModel.swift; path = CryptGuard_iOS/PasswordDataModel.swift; sourceTree = SOURCE_ROOT; };
 		C8BF399D25C5FFAF00654042 /* PasswordGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGenerator.swift; sourceTree = "<group>"; };
 		C8F09F3025BA2F44007F3B06 /* PasswordsListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordsListScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -108,7 +108,7 @@
 		C83302F425BA47BD00FB4275 /* models */ = {
 			isa = PBXGroup;
 			children = (
-				C8263A9825BA37A800498258 /* PasswordData.swift */,
+				C831E6C825C8B05300E9B9A2 /* PasswordDataModel.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -197,9 +197,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C831E6C925C8B05300E9B9A2 /* PasswordDataModel.swift in Sources */,
 				C8F09F3125BA2F44007F3B06 /* PasswordsListScreen.swift in Sources */,
 				C826572925B8E44000B403A6 /* ContentView.swift in Sources */,
-				C8263A9925BA37A800498258 /* PasswordData.swift in Sources */,
 				C8263A9625BA36D300498258 /* PasswordsDetail.swift in Sources */,
 				C826573725B8F8C200B403A6 /* MenuOption.swift in Sources */,
 				C826572725B8E44000B403A6 /* CryptGuard_iOSApp.swift in Sources */,
