@@ -35,7 +35,7 @@
 		C826C84D25BCF54500D718A7 /* EncrypterScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncrypterScreen.swift; sourceTree = "<group>"; };
 		C826C85025BCF99200D718A7 /* DatabaseScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseScreen.swift; sourceTree = "<group>"; };
 		C826C85325BCFEC200D718A7 /* OnlineAccountScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlineAccountScreen.swift; sourceTree = "<group>"; };
-		C831E6C825C8B05300E9B9A2 /* PasswordDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PasswordDataModel.swift; path = CryptGuard_iOS/PasswordDataModel.swift; sourceTree = SOURCE_ROOT; };
+		C831E6C825C8B05300E9B9A2 /* PasswordDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PasswordDataModel.swift; path = CryptGuard_iOS/models/PasswordDataModel.swift; sourceTree = SOURCE_ROOT; };
 		C8BF399D25C5FFAF00654042 /* PasswordGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGenerator.swift; sourceTree = "<group>"; };
 		C8F09F3025BA2F44007F3B06 /* PasswordsListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordsListScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -70,9 +70,9 @@
 		C826572525B8E44000B403A6 /* CryptGuard_iOS */ = {
 			isa = PBXGroup;
 			children = (
+				C831E6D025C8F2AE00E9B9A2 /* models */,
 				C8BF399C25C5FF8700654042 /* encryption_utils */,
 				C83302F525BA47C800FB4275 /* database */,
-				C83302F425BA47BD00FB4275 /* models */,
 				C83302F325BA478400FB4275 /* UI */,
 				C826572625B8E44000B403A6 /* CryptGuard_iOSApp.swift */,
 				C826572825B8E44000B403A6 /* ContentView.swift */,
@@ -91,6 +91,14 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		C831E6D025C8F2AE00E9B9A2 /* models */ = {
+			isa = PBXGroup;
+			children = (
+				C831E6C825C8B05300E9B9A2 /* PasswordDataModel.swift */,
+			);
+			path = models;
+			sourceTree = "<group>";
+		};
 		C83302F325BA478400FB4275 /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -103,14 +111,6 @@
 				C826C85325BCFEC200D718A7 /* OnlineAccountScreen.swift */,
 			);
 			path = UI;
-			sourceTree = "<group>";
-		};
-		C83302F425BA47BD00FB4275 /* models */ = {
-			isa = PBXGroup;
-			children = (
-				C831E6C825C8B05300E9B9A2 /* PasswordDataModel.swift */,
-			);
-			path = models;
 			sourceTree = "<group>";
 		};
 		C83302F525BA47C800FB4275 /* database */ = {
