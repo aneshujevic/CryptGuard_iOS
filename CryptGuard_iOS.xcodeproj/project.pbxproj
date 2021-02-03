@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -18,6 +18,8 @@
 		C826C85125BCF99200D718A7 /* DatabaseScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C826C85025BCF99200D718A7 /* DatabaseScreen.swift */; };
 		C826C85425BCFEC200D718A7 /* OnlineAccountScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C826C85325BCFEC200D718A7 /* OnlineAccountScreen.swift */; };
 		C831E6C925C8B05300E9B9A2 /* PasswordDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C831E6C825C8B05300E9B9A2 /* PasswordDataModel.swift */; };
+		C8342EAC25CA3F3000631914 /* Encrypter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8342EAB25CA3F3000631914 /* Encrypter.swift */; };
+		C888986C25CB4C1A00908582 /* CryptoSwift in Frameworks */ = {isa = PBXBuildFile; productRef = C888986B25CB4C1A00908582 /* CryptoSwift */; };
 		C8BF399E25C5FFAF00654042 /* PasswordGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8BF399D25C5FFAF00654042 /* PasswordGenerator.swift */; };
 		C8F09F3125BA2F44007F3B06 /* PasswordsListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F09F3025BA2F44007F3B06 /* PasswordsListScreen.swift */; };
 /* End PBXBuildFile section */
@@ -36,6 +38,7 @@
 		C826C85025BCF99200D718A7 /* DatabaseScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseScreen.swift; sourceTree = "<group>"; };
 		C826C85325BCFEC200D718A7 /* OnlineAccountScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlineAccountScreen.swift; sourceTree = "<group>"; };
 		C831E6C825C8B05300E9B9A2 /* PasswordDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PasswordDataModel.swift; path = CryptGuard_iOS/models/PasswordDataModel.swift; sourceTree = SOURCE_ROOT; };
+		C8342EAB25CA3F3000631914 /* Encrypter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encrypter.swift; sourceTree = "<group>"; };
 		C8BF399D25C5FFAF00654042 /* PasswordGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGenerator.swift; sourceTree = "<group>"; };
 		C8F09F3025BA2F44007F3B06 /* PasswordsListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordsListScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -45,6 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C888986C25CB4C1A00908582 /* CryptoSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				C8BF399D25C5FFAF00654042 /* PasswordGenerator.swift */,
+				C8342EAB25CA3F3000631914 /* Encrypter.swift */,
 			);
 			path = encryption_utils;
 			sourceTree = "<group>";
@@ -144,6 +149,9 @@
 			dependencies = (
 			);
 			name = CryptGuard_iOS;
+			packageProductDependencies = (
+				C888986B25CB4C1A00908582 /* CryptoSwift */,
+			);
 			productName = CryptGuard_iOS;
 			productReference = C826572325B8E44000B403A6 /* CryptGuard_iOS.app */;
 			productType = "com.apple.product-type.application";
@@ -171,6 +179,9 @@
 				Base,
 			);
 			mainGroup = C826571A25B8E44000B403A6;
+			packageReferences = (
+				C888986A25CB4C1A00908582 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
+			);
 			productRefGroup = C826572425B8E44000B403A6 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -203,6 +214,7 @@
 				C8263A9625BA36D300498258 /* PasswordsDetail.swift in Sources */,
 				C826573725B8F8C200B403A6 /* MenuOption.swift in Sources */,
 				C826572725B8E44000B403A6 /* CryptGuard_iOSApp.swift in Sources */,
+				C8342EAC25CA3F3000631914 /* Encrypter.swift in Sources */,
 				C8BF399E25C5FFAF00654042 /* PasswordGenerator.swift in Sources */,
 				C826C85425BCFEC200D718A7 /* OnlineAccountScreen.swift in Sources */,
 				C826C85125BCF99200D718A7 /* DatabaseScreen.swift in Sources */,
@@ -394,6 +406,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C888986A25CB4C1A00908582 /* XCRemoteSwiftPackageReference "CryptoSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/krzyzanowskim/CryptoSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.8;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C888986B25CB4C1A00908582 /* CryptoSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C888986A25CB4C1A00908582 /* XCRemoteSwiftPackageReference "CryptoSwift" */;
+			productName = CryptoSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C826571B25B8E44000B403A6 /* Project object */;
 }

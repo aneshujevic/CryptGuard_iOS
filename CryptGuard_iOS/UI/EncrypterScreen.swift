@@ -8,7 +8,7 @@ import SwiftUI
 
 struct EncrypterScreen: View {
     
-    @State private var password: String = ""
+    @State private var passphrase: String = ""
     @State private var shouldPick: Bool = false
     @State private var fileContent: [UInt8] = []
     
@@ -30,12 +30,12 @@ struct EncrypterScreen: View {
             
             Form {
                 Section {
-                    TextField("Passphrase", text: $password)
+                    TextField("Passphrase", text: $passphrase)
                         .multilineTextAlignment(.center)
                 }
                 
                 .sheet(isPresented: $shouldPick, content: {
-                    DocumentPicker(fileContent: $fileContent)
+                    DocumentPicker(fileContent: $fileContent, passphrase: $passphrase)
                 })
 
                 
@@ -58,9 +58,10 @@ struct EncrypterScreen: View {
 struct DocumentPicker: UIViewControllerRepresentable {
     
     @Binding var fileContent: [UInt8]
+    @Binding var passphrase: String
     
     func makeCoordinator() -> DocumentPickerCoordinator {
-        return DocumentPickerCoordinator(fileContent: $fileContent)
+        return DocumentPickerCoordinator(fileContent: $fileContent, passphrase: $passphrase)
     }
 
     func makeUIViewController(context: Context) -> some UIViewController {
@@ -79,9 +80,11 @@ struct DocumentPicker: UIViewControllerRepresentable {
 class DocumentPickerCoordinator: NSObject, UIDocumentPickerDelegate, UINavigationControllerDelegate {
     
     @Binding var fileContent: [UInt8]
+    @Binding var passphrase: String
     
-    init(fileContent: Binding<[UInt8]>) {
+    init(fileContent: Binding<[UInt8]>, passphrase: Binding<String>) {
         _fileContent = fileContent
+        _passphrase = passphrase
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {

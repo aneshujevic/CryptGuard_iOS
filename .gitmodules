@@ -1,0 +1,3 @@
+[submodule "CryptGuard_iOS/CryptoSwift"]
+	path = CryptGuard_iOS/CryptoSwift
+	url = https://github.com/krzyzanowskim/CryptoSwift.git
