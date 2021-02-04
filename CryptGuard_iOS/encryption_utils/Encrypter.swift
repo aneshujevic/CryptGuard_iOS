@@ -7,7 +7,7 @@ import Foundation
 import CryptoSwift
 
 class Encrypter {
-    private let ITERATION_COUNT = 50_000
+    private let ITERATION_COUNT = 500
     private let AES_KEY_LEN = 256
 
     // Encrypt the data from stream, encode it to base64 and append salt and iv to it (base64 too)
@@ -23,7 +23,9 @@ class Encrypter {
                 
                 let iv = AES.randomIV(AES.blockSize)
                 
-                let aes = try AES(key: key, blockMode: GCM(iv: iv), padding: .noPadding)
+                let gcm = GCM(iv: iv, mode: .combined)
+                
+                let aes = try AES(key: key, blockMode: gcm, padding: .noPadding)
                 
                 let inputData = try Data(reading: inputStream)
                 
@@ -48,7 +50,7 @@ class Encrypter {
             
             let key: Array<UInt8> = try PKCS5.PBKDF2(password: Array(password.utf8), salt: passwordSalt, iterations: ITERATION_COUNT, keyLength: 32, variant: .sha512).calculate()
             
-            let gcm = GCM(iv: initVector)
+            let gcm = GCM(iv: initVector, mode: .combined)
             
             let aes = try AES(key: key, blockMode: gcm, padding: .noPadding)
             
@@ -73,7 +75,9 @@ class Encrypter {
                 
                 let iv = AES.randomIV(AES.blockSize)
                 
-                let aes = try AES(key: key, blockMode: GCM(iv: iv), padding: .noPadding)
+                let gcm = GCM(iv: iv, mode: .combined)
+                
+                let aes = try AES(key: key, blockMode: gcm, padding: .noPadding)
                                 
                 let encryptedBytes = try aes.encrypt(inputString.bytes)
                 let result = Data(encryptedBytes)
@@ -86,7 +90,7 @@ class Encrypter {
         return ""
     }
 
-    func decryptBase64String(inputString: String, password: String, salt: String, initVector: String) -> String {
+    func decryptBase64String(inputString: String, password: String) -> String {
         do {
             let cipherText = inputString.split(separator: "\n")[0]
             let passwordSalt = [UInt8](base64: String(inputString.split(separator: "\n")[1]))
@@ -94,11 +98,12 @@ class Encrypter {
             
             let key: Array<UInt8> = try PKCS5.PBKDF2(password: Array(password.utf8), salt: passwordSalt, iterations: ITERATION_COUNT, keyLength: 32, variant: .sha512).calculate()
             
-            let gcm = GCM(iv: initVector)
+            let gcm = GCM(iv: initVector, mode: .combined)
             
             let aes = try AES(key: key, blockMode: gcm, padding: .noPadding)
-            
-            let decryptedBytes = try aes.decrypt([UInt8](base64:String(cipherText)))
+            let cipherTextStringBase64 = String(cipherText)
+            let byteArrayBase64 = [UInt8](base64:cipherTextStringBase64)
+            let decryptedBytes = try aes.decrypt(byteArrayBase64)
             
             return String(bytes: decryptedBytes, encoding: .utf8)!
         } catch {

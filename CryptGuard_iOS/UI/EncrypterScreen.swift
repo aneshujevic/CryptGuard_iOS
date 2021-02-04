@@ -98,12 +98,16 @@ class DocumentPickerCoordinator: NSObject, UIDocumentPickerDelegate, UINavigatio
             print(fileContent)
             */
             if let stream: InputStream = InputStream(url: fileURL) {
-                var buf: [UInt8] = [UInt8](repeating: 0, count: fileSize as Int)
-                stream.open()
-                let len = stream.read(&buf, maxLength: fileSize)
-                for i in 0..<len {
-                    print(String(format:"%02x ", buf[i]), terminator: "")
-                }
+                
+                let encrypter = Encrypter()
+                
+                print("Encrypted:")
+                let x = encrypter.encryptStreamAndGetBase64(inputStream: stream, password: "hello")
+                print(x)
+                
+                print("Decrypted")
+                print(encrypter.decryptBase64String(inputString: x, password: "hello"))
+                
                 stream.close()
             }
         } catch {
