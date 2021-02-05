@@ -7,9 +7,10 @@
 import SwiftUI
 
 struct DatabaseScreen: View {
-    
-    @State private var currentDBPassword: String = ""
     @State private var newDBPassword: String = ""
+    @State private var showStrengthAlert: Bool = false
+    @Binding var databaseUnlocked: Bool
+    @Binding var databasePassword: String
     
     var body: some View {
         VStack(alignment: .center, spacing: 15, content: {
@@ -25,21 +26,34 @@ struct DatabaseScreen: View {
             
             Form {
                 Section {
-                    TextField("Enter current database password", text: $currentDBPassword)
+                    TextField("Enter current database password", text: $databasePassword)
                 }
 
                 Section {
-                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+                    Button(action: {
+                        databasePassword = ""
+                        databaseUnlocked = false
+                    }, label: {
                         Text("Lock database")
+                    }).disabled(!databaseUnlocked)
+                    
+                    .alert(isPresented: $showStrengthAlert, content: {
+                        Alert(title: Text("Alert"), message: Text("Password has to have 8 or more characters including uppercase letter, lowercase letter, number and punctuation mark."), dismissButton: .default(Text("OK")))
                     })
                     
-                    Button(action: {}, label: {
+                    Button(action: {
+                        if validatePassphrase(databasePassword) {
+                            databaseUnlocked = true
+                        } else {
+                            showStrengthAlert = true
+                        }
+                    }, label: {
                         Text("Unlock database")
-                    })
+                    }).disabled(databaseUnlocked)
                 }
             
                 Section {
-                    TextField("Enter new database password", text: $currentDBPassword)
+                    TextField("Enter new database password", text: $newDBPassword)
                 }
 
                 Section {
@@ -72,7 +86,9 @@ struct DatabaseScreen: View {
 }
 
 struct Database_Previews: PreviewProvider {
+    @State private static var databasePassword: String = ""
+    @State private static var databaseUnlocked: Bool = false
     static var previews: some View {
-        DatabaseScreen()
+        DatabaseScreen(databaseUnlocked: $databaseUnlocked, databasePassword: $databasePassword)
     }
 }

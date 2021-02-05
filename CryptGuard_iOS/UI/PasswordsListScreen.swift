@@ -8,13 +8,23 @@ import SwiftUI
 
 struct PasswordsListScreen: View {
     @State private var passwordList: [PasswordData] = []
+    @State private var showPasswordAlert: Bool = false
+    @State private var navigateDatabaseScreen: Bool = false
+    @Binding private var databasePassword: String
+    @Binding private var databaseUnlocked: Bool
     
-    init() {
+    init(databasePassword: Binding<String>, databaseUnlocked: Binding<Bool>) {
+        if databasePassword.wrappedValue == "" {
+            _showPasswordAlert = State(initialValue: true)
+        }
+        _databasePassword = databasePassword
+        _databaseUnlocked = databaseUnlocked
+        
         UserDefaults.standard.synchronize()
         if let data = UserDefaults.standard.value(forKey: "pdlist") as? Data {
             let pdl = try! PropertyListDecoder().decode(Array<PasswordData>.self, from: data)
             _passwordList = State(initialValue: pdl)
-        } 
+        }
     }
     
     var body: some View{
@@ -31,10 +41,18 @@ struct PasswordsListScreen: View {
                         }
                     }
                 }
+                
+                .alert(isPresented: $showPasswordAlert, content: {
+                    Alert(
+                        title: Text("Alert"),
+                        message: Text("Enter the database password to access password data."),
+                        dismissButton: .default(Text("OK"))
+                    )}
+                )
+                
                 Section{
-                    NavigationLink(
-                        destination: PasswordsDetail(id: nil, passwordList: $passwordList)) {
-                        Text("Add password data")
+                    if databaseUnlocked {
+                        NavigationLink("Add password data", destination: PasswordsDetail(id: nil, passwordList: $passwordList))
                             .font(.callout)
                             .foregroundColor(.blue)
                     }
@@ -46,8 +64,10 @@ struct PasswordsListScreen: View {
 }
 
 struct PasswordsList_Previews: PreviewProvider {
+    @State private static var databasePassword: String = ""
+    @State private static var databaseUnlocked: Bool = false
     static var previews: some View {
-        PasswordsListScreen()
+        PasswordsListScreen(databasePassword: $databasePassword, databaseUnlocked: $databaseUnlocked)
     }
 }
 

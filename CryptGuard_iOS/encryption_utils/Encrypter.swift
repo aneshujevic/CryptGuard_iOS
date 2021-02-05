@@ -40,7 +40,7 @@ class Encrypter {
         return ""
     }
 
-    func decryptStream(inputStream: InputStream, password: String) -> String {
+    func decryptStream(inputStream: InputStream, password: String) throws -> String {
         do {
             let encryptedData = try Data(reading: inputStream)
             let cipherData = String(decoding: encryptedData, as: UTF8.self)
@@ -59,7 +59,7 @@ class Encrypter {
             return String(bytes: decryptedBytes, encoding: .utf8)!
         } catch {
             print(error.localizedDescription)
-            return ""
+            throw error
         }
     }
 
@@ -90,7 +90,7 @@ class Encrypter {
         return ""
     }
 
-    func decryptBase64String(inputString: String, password: String) -> String {
+    func decryptBase64String(inputString: String, password: String) throws -> String {
         do {
             let cipherText = inputString.split(separator: "\n")[0]
             let passwordSalt = [UInt8](base64: String(inputString.split(separator: "\n")[1]))
@@ -108,7 +108,7 @@ class Encrypter {
             return String(bytes: decryptedBytes, encoding: .utf8)!
         } catch {
             print(error.localizedDescription)
-            return ""
+            throw error
         }
     }
 
@@ -158,4 +158,9 @@ extension Data {
             self.append(buffer, count: read)
         }
     }
+}
+
+func validatePassphrase(_ passphrase: String) -> Bool {
+    let passwordRegex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*()\\-_=+{}|?>.<,:;~`’]{8,}$"
+    return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: passphrase)
 }

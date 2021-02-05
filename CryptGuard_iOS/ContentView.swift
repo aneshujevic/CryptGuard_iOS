@@ -6,15 +6,18 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var databasePassword: String = ""
+    @State private var databaseUnlocked: Bool = false
+
 var body: some View {
     NavigationView {
         List() {
             NavigationLink(
-                destination: PasswordsListScreen()) {
+                destination: PasswordsListScreen(databasePassword: $databasePassword, databaseUnlocked: $databaseUnlocked)) {
                 OptionsRow(option: menuOptions[0])
             }
             NavigationLink(
-                destination: DatabaseScreen()) {
+                destination: DatabaseScreen(databaseUnlocked: $databaseUnlocked, databasePassword: $databasePassword)) {
                 OptionsRow(option: menuOptions[1])
             }
             NavigationLink(

@@ -16,6 +16,8 @@ struct EncrypterScreen: View {
     @State private var encryptedDocumentData: Data? = nil
     @State private var isDecrypting: Bool = false
     @State private var fileName: String = ""
+    @State private var alertMessage: String = ""
+    @State private var alertTitle: String = ""
     
     var body: some View {
         VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/, spacing: 15, content: {
@@ -34,7 +36,7 @@ struct EncrypterScreen: View {
                 .multilineTextAlignment(.center)
             
                 .alert(isPresented: $shouldShowAlert, content: {
-                Alert(title: Text("Alert"), message: Text("Password has to have 8 or more characters including uppercase letter, lowercase letter, number and punctuation mark."), dismissButton: .default(Text("OK")))
+                    Alert(title: Text(alertTitle != "" ? alertTitle: "Alert"), message: Text(alertMessage != "" ? alertMessage : "Password has to have 8 or more characters including uppercase letter, lowercase letter, number and punctuation mark."), dismissButton: .default(Text("OK")))
             })
             
                 .fileExporter(isPresented: $isExporting, document: EncryptedDocument(data: encryptedDocumentData ?? nil), contentType: .data, defaultFilename: fileName) { _ in }
@@ -46,7 +48,7 @@ struct EncrypterScreen: View {
                 }
                 
                 .sheet(isPresented: $shouldPick, content: {
-                    DocumentPicker(fileContent: $fileContent, passphrase: $passphrase, shouldShowAlert: $shouldShowAlert, encryptedDocumentData:   $encryptedDocumentData, isExporting: $isExporting, isDecrypting: $isDecrypting, fileName: $fileName)
+                    DocumentPicker(fileContent: $fileContent, passphrase: $passphrase, shouldShowAlert: $shouldShowAlert, encryptedDocumentData:   $encryptedDocumentData, isExporting: $isExporting, isDecrypting: $isDecrypting, fileName: $fileName, alertMessage: $alertMessage, alertTitle: $alertTitle)
                 })
 
                 
@@ -79,9 +81,11 @@ struct DocumentPicker: UIViewControllerRepresentable {
     @Binding var isExporting: Bool
     @Binding var isDecrypting: Bool
     @Binding var fileName: String
+    @Binding var alertMessage: String
+    @Binding var alertTitle: String
     
     func makeCoordinator() -> DocumentPickerCoordinator {
-        return DocumentPickerCoordinator(fileContent: $fileContent, passphrase: $passphrase, shouldShowAlert: $shouldShowAlert, encryptedDocumentData: $encryptedDocumentData, isExporting: $isExporting, isDecrypting: $isDecrypting, fileName: $fileName)
+        return DocumentPickerCoordinator(fileContent: $fileContent, passphrase: $passphrase, shouldShowAlert: $shouldShowAlert, encryptedDocumentData: $encryptedDocumentData, isExporting: $isExporting, isDecrypting: $isDecrypting, fileName: $fileName, alertMessage: $alertMessage, alertTitle: $alertTitle)
     }
 
     func makeUIViewController(context: Context) -> some UIViewController {
@@ -106,9 +110,11 @@ class DocumentPickerCoordinator: NSObject, UIDocumentPickerDelegate, UINavigatio
     @Binding var isExporting: Bool
     @Binding var isDecrypting: Bool
     @Binding var fileName: String
+    @Binding var alertMessage: String
+    @Binding var alertTitle: String
     
     init(fileContent: Binding<[UInt8]>, passphrase: Binding<String>, shouldShowAlert: Binding<Bool>,
-         encryptedDocumentData: Binding<Data?>, isExporting: Binding<Bool>, isDecrypting: Binding<Bool>, fileName: Binding<String>) {
+         encryptedDocumentData: Binding<Data?>, isExporting: Binding<Bool>, isDecrypting: Binding<Bool>, fileName: Binding<String>, alertMessage: Binding<String>, alertTitle: Binding<String>) {
         _fileContent = fileContent
         _passphrase = passphrase
         _shouldShowAlert = shouldShowAlert
@@ -116,6 +122,8 @@ class DocumentPickerCoordinator: NSObject, UIDocumentPickerDelegate, UINavigatio
         _isExporting = isExporting
         _isDecrypting = isDecrypting
         _fileName = fileName
+        _alertTitle = alertTitle
+        _alertMessage = alertMessage
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
@@ -137,9 +145,15 @@ class DocumentPickerCoordinator: NSObject, UIDocumentPickerDelegate, UINavigatio
             let encrypter = Encrypter()
             
             if isDecrypting {
-                let decryptedContent = encrypter.decryptStream(inputStream: stream, password: passphrase)
+                do {
+                let decryptedContent = try encrypter.decryptStream(inputStream: stream, password: passphrase)
                 encryptedDocumentData = Data(decryptedContent.bytes)
-                print(decryptedContent)
+                } catch {
+                    encryptedDocumentData = nil
+                    alertMessage = "Incorrect passphrase, please try again."
+                    alertTitle = "Error"
+                    shouldShowAlert.toggle()
+                }
             } else {
                 let encryptedContent = encrypter.encryptStreamAndGetBase64(inputStream: stream, password: passphrase)
                 encryptedDocumentData = Data(encryptedContent.utf8)
@@ -147,16 +161,10 @@ class DocumentPickerCoordinator: NSObject, UIDocumentPickerDelegate, UINavigatio
 //                let downloadsPath = try FileManager.default.url(for: .downloadsDirectory, in: .userDomainMask, appropriateFor: .none, create: false)
 //                let newFilePath = downloadsPath.appendingPathComponent("\(fileName).cgfe", isDirectory: false)
 //                let res = FileManager.default.createFile(atPath: newFilePath.path, contents: Data(encryptedContent.utf8), attributes: .none)
-                print(encrypter.decryptBase64String(inputString: encryptedContent, password: passphrase))
             }
             
-            isExporting = true
+            isExporting.toggle()
         }
-    }
-    
-    func validatePassphrase(_ passphrase: String) -> Bool {
-        let passwordRegex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*()\\-_=+{}|?>.<,:;~`’]{8,}$"
-        return NSPredicate(format: "SELF MATCHES %@", passwordRegex).evaluate(with: passphrase)
     }
 }
 
