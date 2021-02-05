@@ -29,8 +29,6 @@ struct PasswordsListScreen: View {
     
     var body: some View{
         VStack {
-            Text("List of password data")
-                .font(.title)
             Form {
                 Section {
                     if databaseUnlocked {
@@ -41,6 +39,9 @@ struct PasswordsListScreen: View {
                                 PasswordsListRow(passwordList: $passwordList, databaseUnlocked: $databaseUnlocked, databasePassword: $databasePassword, passwordData: passwordData)
                             }
                         }
+                    } else {
+                        Text("Enter database password to access the data.")
+                            .foregroundColor(.gray)
                     }
                 }
                 

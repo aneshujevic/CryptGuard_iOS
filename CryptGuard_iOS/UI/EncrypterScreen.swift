@@ -157,10 +157,6 @@ class DocumentPickerCoordinator: NSObject, UIDocumentPickerDelegate, UINavigatio
             } else {
                 let encryptedContent = encrypter.encryptStreamAndGetBase64(inputStream: stream, password: passphrase)
                 encryptedDocumentData = Data(encryptedContent.utf8)
-//                // finding URL of documents directory
-//                let downloadsPath = try FileManager.default.url(for: .downloadsDirectory, in: .userDomainMask, appropriateFor: .none, create: false)
-//                let newFilePath = downloadsPath.appendingPathComponent("\(fileName).cgfe", isDirectory: false)
-//                let res = FileManager.default.createFile(atPath: newFilePath.path, contents: Data(encryptedContent.utf8), attributes: .none)
             }
             
             isExporting.toggle()

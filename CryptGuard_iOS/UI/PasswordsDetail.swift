@@ -140,7 +140,7 @@ struct PasswordsDetail: View {
                             return
                         }
                         createOrUpdatePasswordData()
-                        saveChangesToUserDefaults()
+                        saveChangesToUserDefaults(passwordList: passwordList)
                         alertCreatedShow.toggle()
                     }, label: {
                         Text("Save password data")
@@ -155,7 +155,7 @@ struct PasswordsDetail: View {
                             return
                         }
                         removeCurrentPasswordData()
-                        saveChangesToUserDefaults()
+                        saveChangesToUserDefaults(passwordList: passwordList)
                         alertDeletedShow.toggle()
                     }, label: {
                         Text("Delete password data")
@@ -167,11 +167,6 @@ struct PasswordsDetail: View {
                 }
             }
         }
-    }
-    
-    fileprivate func saveChangesToUserDefaults() {
-        UserDefaults.standard.set(try! PropertyListEncoder().encode(passwordList), forKey: "pdlist")
-        UserDefaults.standard.synchronize()
     }
     
     fileprivate func createOrUpdatePasswordData() {
