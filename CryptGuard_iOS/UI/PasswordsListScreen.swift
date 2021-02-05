@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct PasswordsListScreen: View {
-    @State private var passwordList: [PasswordData] = []
+    @State private var passwordList: [String] = []
     @State private var showPasswordAlert: Bool = false
     @State private var navigateDatabaseScreen: Bool = false
     @Binding private var databasePassword: String
@@ -22,7 +22,7 @@ struct PasswordsListScreen: View {
         
         UserDefaults.standard.synchronize()
         if let data = UserDefaults.standard.value(forKey: "pdlist") as? Data {
-            let pdl = try! PropertyListDecoder().decode(Array<PasswordData>.self, from: data)
+            let pdl = try! PropertyListDecoder().decode(Array<String>.self, from: data)
             _passwordList = State(initialValue: pdl)
         }
     }
@@ -33,11 +33,13 @@ struct PasswordsListScreen: View {
                 .font(.title)
             Form {
                 Section {
-                    if passwordList.count == 0 {
-                        Text("No password data yet.")
-                    } else {
-                        List(passwordList) { passwordData in
-                            PasswordsListRow(passwordList: $passwordList, passwordData: passwordData)
+                    if databaseUnlocked {
+                        if passwordList.count == 0 {
+                            Text("No password data yet.")
+                        } else {
+                            List(passwordList.map( {decryptPasswordData($0)} )) { passwordData in
+                                PasswordsListRow(passwordList: $passwordList, databaseUnlocked: $databaseUnlocked, databasePassword: $databasePassword, passwordData: passwordData)
+                            }
                         }
                     }
                 }
@@ -52,7 +54,7 @@ struct PasswordsListScreen: View {
                 
                 Section{
                     if databaseUnlocked {
-                        NavigationLink("Add password data", destination: PasswordsDetail(id: nil, passwordList: $passwordList))
+                        NavigationLink("Add password data", destination: PasswordsDetail(id: nil, passwordList: $passwordList, databasePassword: $databasePassword, databaseUnlocked: $databaseUnlocked))
                             .font(.callout)
                             .foregroundColor(.blue)
                     }
@@ -60,6 +62,13 @@ struct PasswordsListScreen: View {
             }
         }
         .navigationBarTitle("Passwords list")
+    }
+    
+    fileprivate func decryptPasswordData(_ str: String) -> PasswordData {
+        let encrypter = Encrypter()
+        let decryptedJSONPd = try! encrypter.decryptBase64String(inputString: str, password: $databasePassword.wrappedValue)
+        let jsonEncoder = JSONDecoder()
+        return try! jsonEncoder.decode(PasswordData.self, from: Data(decryptedJSONPd.utf8))
     }
 }
 
@@ -72,11 +81,13 @@ struct PasswordsList_Previews: PreviewProvider {
 }
 
 struct PasswordsListRow: View {
-    @Binding var passwordList: [PasswordData]
+    @Binding var passwordList: [String]
+    @Binding var databaseUnlocked: Bool
+    @Binding var databasePassword: String
     let passwordData: PasswordData
     
     var body: some View {
-        NavigationLink(destination: PasswordsDetail(id: passwordData.id, passwordList: $passwordList)) {
+        NavigationLink(destination: PasswordsDetail(id: passwordData.id, passwordList: $passwordList, databasePassword: $databasePassword, databaseUnlocked: $databaseUnlocked)) {
                 HStack(){
                     VStack(alignment: .leading, spacing: nil, content: {
                         Text(passwordData.siteName ?? "")
