@@ -22,8 +22,8 @@ struct PasswordsListScreen: View {
         
         UserDefaults.standard.synchronize()
         if let data = UserDefaults.standard.value(forKey: "pdlist") as? Data {
-            let pdl = try! PropertyListDecoder().decode(Array<String>.self, from: data)
-            _passwordList = State(initialValue: pdl)
+            let encryptedPasswordDataList = try! PropertyListDecoder().decode(Array<String>.self, from: data)
+            _passwordList = State(initialValue: encryptedPasswordDataList)
         }
     }
     

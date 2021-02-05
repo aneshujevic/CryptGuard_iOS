@@ -9,6 +9,7 @@ import SwiftUI
 struct DatabaseScreen: View {
     @State private var newDBPassword: String = ""
     @State private var showStrengthAlert: Bool = false
+    @State private var showWrongPasswordAlert: Bool = false
     @Binding var databaseUnlocked: Bool
     @Binding var databasePassword: String
     
@@ -41,8 +42,23 @@ struct DatabaseScreen: View {
                         Alert(title: Text("Alert"), message: Text("Password has to have 8 or more characters including uppercase letter, lowercase letter, number and punctuation mark."), dismissButton: .default(Text("OK")))
                     })
                     
+                    .alert(isPresented: $showWrongPasswordAlert, content: {
+                        Alert(title: Text("Alert"), message: Text("Wrong password. Please try again."), dismissButton: .default(Text("OK")))
+                    })
+                    
                     Button(action: {
                         if validatePassphrase(databasePassword) {
+                            if let data = UserDefaults.standard.value(forKey: "pdlist") as? Data {
+                                let encryptedPasswordDataList = try! PropertyListDecoder().decode(Array<String>.self, from: data)
+                                if encryptedPasswordDataList.count != 0 {
+                                    do {
+                                        let encrypter = Encrypter()
+                                        try encrypter.decryptBase64String(inputString: encryptedPasswordDataList[0], password: databasePassword)
+                                    } catch {
+                                        showWrongPasswordAlert.toggle()
+                                    }
+                                }
+                            }
                             databaseUnlocked = true
                         } else {
                             showStrengthAlert = true
