@@ -34,6 +34,10 @@ struct DatabaseScreen: View {
             
             Form {
                 Section {
+                    Text("Database lockdown operations")
+                        .font(.title2)
+                        .multilineTextAlignment(.center)
+                    
                     TextField("Enter current database password", text: $databasePassword)
                     
                     Button(action: {
@@ -67,6 +71,9 @@ struct DatabaseScreen: View {
                 
 
                 Section {
+                    Text("Database password operations")
+                        .font(.title2)
+                        .multilineTextAlignment(.center)
                     TextField("Enter new database password", text: $newDbPassword)
                     Button(action: {
                         if verifyDatabasePassphrase() {
