@@ -10,9 +10,11 @@ struct DatabaseScreen: View {
     @State private var newDbPassword: String = ""
     @State private var showStrengthAlert: Bool = false
     @State private var showWrongPasswordAlert: Bool = false
-    @State private var showSuccessfullPasswordChangeAlert: Bool = false
+    @State private var showSuccessfulAlert: Bool = false
     @State private var databaseDocument: EncryptedDocument? = nil
     @State private var isExportingDatabase: Bool = false
+    @State private var isImportingDatabase: Bool = false
+    @State private var showErrorAlert: Bool = false
     @Binding var databaseUnlocked: Bool
     @Binding var databasePassword: String
     
@@ -29,18 +31,6 @@ struct DatabaseScreen: View {
                 .shadow(radius: 3)
             
                 .fileExporter(isPresented: $isExportingDatabase, document: databaseDocument, contentType: .data, defaultFilename: String("\(Date()).cryptguard.db"), onCompletion: {_ in})
-            
-                .alert(isPresented: $showStrengthAlert, content: {
-                    Alert(title: Text("Alert"), message: Text("Password has to have 8 or more characters including uppercase letter, lowercase letter, number and punctuation mark."), dismissButton: .default(Text("OK")))
-                })
-            
-                .alert(isPresented: $showSuccessfullPasswordChangeAlert, content: {
-                    Alert(title: Text("Notification"), message: Text("Successfully changed database password."), dismissButton: .default(Text("OK")))
-                })
-            
-                .alert(isPresented: $showWrongPasswordAlert, content: {
-                    Alert(title: Text("Alert"), message: Text("Wrong password. Please try again."), dismissButton: .default(Text("OK")))
-                })
             
             Form {
                 Section {
@@ -68,6 +58,10 @@ struct DatabaseScreen: View {
                     }, label: {
                         Text("Unlock database")
                     }).disabled(databaseUnlocked)
+                    
+                    .alert(isPresented: $showStrengthAlert, content: {
+                        Alert(title: Text("Alert"), message: Text("Password has to have 8 or more characters including uppercase letter, lowercase letter, number and punctuation mark."), dismissButton: .default(Text("OK")))
+                    })
                 }
                 
                 
@@ -81,13 +75,16 @@ struct DatabaseScreen: View {
                                 return
                             }
                             if reEncryptDatabase(databasePassword: databasePassword, newDbPassword: newDbPassword) {
-                                showSuccessfullPasswordChangeAlert.toggle()
+                                showSuccessfulAlert.toggle()
                             }
                         } else {
                             showWrongPasswordAlert.toggle()
                         }
                     }, label: {
                         Text("Change database password")
+                    })
+                    .alert(isPresented: $showWrongPasswordAlert, content: {
+                        Alert(title: Text("Alert"), message: Text("Wrong password. Please try again."), dismissButton: .default(Text("OK")))
                     })
                 }
                 
@@ -103,20 +100,33 @@ struct DatabaseScreen: View {
                         Text("Export database")
                     })
                 
-                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+                    Button(action: {
+                        isImportingDatabase.toggle()
+                    }, label: {
                         Text("Import database")
                     })
 
-                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+                    Button(action: {
+                        deleteDatabaseUserDefaults()
+                        showSuccessfulAlert.toggle()
+                    }, label: {
                         Text("Delete current database")
                             .foregroundColor(.red)
+                    })
+                    
+                    .sheet(isPresented: $isImportingDatabase, content: {
+                        DocumentPicker(showErrorAlert: $showErrorAlert)
+                    })
+                    
+                    .alert(isPresented: $showSuccessfulAlert, content: {
+                        Alert(title: Text("Notification"), message: Text("Successfully done."), dismissButton: .default(Text("OK")))
                     })
                 }
             }
         })
     }
     
-    fileprivate func verifyDatabasePassphrase() -> Bool {
+    func verifyDatabasePassphrase() -> Bool {
         if let data = UserDefaults.standard.value(forKey: "pdlist") as? Data {
             let encryptedPasswordDataList = try! PropertyListDecoder().decode(Array<String>.self, from: data)
             if encryptedPasswordDataList.count != 0 {
@@ -133,6 +143,61 @@ struct DatabaseScreen: View {
             }
         }
         return true
+    }
+    
+    struct DocumentPicker: UIViewControllerRepresentable {
+        @Binding var showErrorAlert: Bool
+        
+        func makeCoordinator() -> DocumentPickerCoordinator {
+            return DocumentPickerCoordinator(showErrorAlert: $showErrorAlert)
+        }
+
+        func makeUIViewController(context: Context) -> some UIViewController {
+            let controller: UIDocumentPickerViewController
+            
+            controller = UIDocumentPickerViewController(forOpeningContentTypes: [.data])
+            
+            controller.delegate = context.coordinator
+            return controller
+        }
+        
+        func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+        }
+    }
+
+    class DocumentPickerCoordinator: NSObject, UIDocumentPickerDelegate, UINavigationControllerDelegate {
+        @Binding var showErrorAlert: Bool
+        
+        init(showErrorAlert: Binding<Bool>) {
+            _showErrorAlert = showErrorAlert
+        }
+        
+        func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+            let fileURL = urls[0]
+                        
+            if let stream: InputStream = InputStream(url: fileURL) {
+                
+                defer {
+                    stream.close()
+                }
+                
+                deleteDatabaseUserDefaults()
+                // Importing database
+                var encryptedPasswordDataList: [String] = []
+                do {
+                    let encryptedDocumentData = try Data(reading: stream)
+                    let databaseString = String(data: encryptedDocumentData , encoding: .utf8)!
+                    for row in databaseString.split(separator: "\n") {
+                        _ = row.split(separator: ",")[0]
+                        let pd = row.split(separator: ",")[1].replacingOccurrences(of: ".", with: "\n")
+                        encryptedPasswordDataList.append(pd)
+                        saveChangesToUserDefaults(passwordList: encryptedPasswordDataList)
+                    }
+                } catch  {
+                    showErrorAlert.toggle()
+                }
+            }
+        }
     }
 }
 

@@ -20,7 +20,6 @@ struct PasswordsListScreen: View {
         _databasePassword = databasePassword
         _databaseUnlocked = databaseUnlocked
         
-        UserDefaults.standard.synchronize()
         if let data = UserDefaults.standard.value(forKey: "pdlist") as? Data {
             let encryptedPasswordDataList = try! PropertyListDecoder().decode(Array<String>.self, from: data)
             _passwordList = State(initialValue: encryptedPasswordDataList)
@@ -35,7 +34,7 @@ struct PasswordsListScreen: View {
                         if passwordList.count == 0 {
                             Text("No password data yet.")
                         } else {
-                            List(passwordList.map( {decryptPasswordData($0)} )) { passwordData in
+                            List(passwordList.map( {decryptPasswordData($0, databasePassword)} )) { passwordData in
                                 PasswordsListRow(passwordList: $passwordList, databaseUnlocked: $databaseUnlocked, databasePassword: $databasePassword, passwordData: passwordData)
                             }
                         }
@@ -63,13 +62,6 @@ struct PasswordsListScreen: View {
             }
         }
         .navigationBarTitle("Passwords list")
-    }
-    
-    fileprivate func decryptPasswordData(_ str: String) -> PasswordData {
-        let encrypter = Encrypter()
-        let decryptedJSONPd = try! encrypter.decryptBase64String(inputString: str, password: $databasePassword.wrappedValue)
-        let jsonEncoder = JSONDecoder()
-        return try! jsonEncoder.decode(PasswordData.self, from: Data(decryptedJSONPd.utf8))
     }
 }
 

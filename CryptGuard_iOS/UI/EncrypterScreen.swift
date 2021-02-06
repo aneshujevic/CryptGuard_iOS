@@ -73,7 +73,6 @@ struct EncrypterScreen: View {
 }
 
 struct DocumentPicker: UIViewControllerRepresentable {
-    
     @Binding var fileContent: [UInt8]
     @Binding var passphrase: String
     @Binding var shouldShowAlert: Bool
@@ -102,7 +101,6 @@ struct DocumentPicker: UIViewControllerRepresentable {
 }
 
 class DocumentPickerCoordinator: NSObject, UIDocumentPickerDelegate, UINavigationControllerDelegate {
-    
     @Binding var fileContent: [UInt8]
     @Binding var passphrase: String
     @Binding var shouldShowAlert: Bool

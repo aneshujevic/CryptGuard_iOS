@@ -34,7 +34,7 @@ struct PasswordsDetail: View {
             pdCurrent = nil
         } else {
             if let currPD = passwordList.wrappedValue.map({ (encryptedPd) -> PasswordData in
-                decryptPasswordData(encryptedPd)
+                decryptPasswordData(encryptedPd, databasePassword.wrappedValue)
             }).first(where: {
                 $0.id.uuidString == id!.uuidString
             }) {
@@ -181,7 +181,7 @@ struct PasswordsDetail: View {
             passwordList?.append(pdEncrypted)
         } else {
             let pdIndex = passwordList?.map({ (encryptedPd) -> PasswordData in
-                decryptPasswordData(encryptedPd)
+                decryptPasswordData(encryptedPd, $databasePassword.wrappedValue)
             }).firstIndex(where: {$0.id == pdCurrent?.id})
             
             let pd = PasswordData(id: pdCurrent!.id, siteName: siteName, username: username, email: email, password: password, additionalData: additionalData)
@@ -192,16 +192,9 @@ struct PasswordsDetail: View {
         }
     }
     
-    fileprivate func decryptPasswordData(_ str: String) -> PasswordData {
-        let encrypter = Encrypter()
-        let encryptedJsonPDString = try! encrypter.decryptBase64String(inputString: str, password: $databasePassword.wrappedValue)
-        let jsonEncoder = JSONDecoder()
-        return try! jsonEncoder.decode(PasswordData.self, from: Data(encryptedJsonPDString.bytes))
-    }
-    
     fileprivate func removeCurrentPasswordData() {
         passwordList?.remove(at: (passwordList?.map({ (encryptedPd) -> PasswordData in
-            decryptPasswordData(encryptedPd)
+            decryptPasswordData(encryptedPd, $databasePassword.wrappedValue)
         }).firstIndex(where: {$0.id == pdCurrent?.id}))!)
     }
     
