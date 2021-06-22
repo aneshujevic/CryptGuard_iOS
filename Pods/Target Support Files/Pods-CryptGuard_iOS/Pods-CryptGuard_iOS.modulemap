@@ -1,0 +1,6 @@
+framework module Pods_CryptGuard_iOS {
+  umbrella header "Pods-CryptGuard_iOS-umbrella.h"
+
+  export *
+  module * { export * }
+}

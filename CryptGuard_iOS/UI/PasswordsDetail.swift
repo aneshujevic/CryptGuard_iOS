@@ -160,6 +160,7 @@ struct PasswordsDetail: View {
                     }, label: {
                         Text("Delete password data")
                             .disabled(shouldCreate)
+                            .foregroundColor(.red)
                     })
                     
                     .alert(isPresented: $alertDeletedShow, content:{

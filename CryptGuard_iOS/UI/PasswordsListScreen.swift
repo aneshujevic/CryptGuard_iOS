@@ -20,7 +20,7 @@ struct PasswordsListScreen: View {
         _databasePassword = databasePassword
         _databaseUnlocked = databaseUnlocked
         
-        if let data = UserDefaults.standard.value(forKey: "pdlist") as? Data {
+        if let data = UserDefaults.standard.object(forKey: "pdlist") as? Data {
             let encryptedPasswordDataList = try! PropertyListDecoder().decode(Array<String>.self, from: data)
             _passwordList = State(initialValue: encryptedPasswordDataList)
         }

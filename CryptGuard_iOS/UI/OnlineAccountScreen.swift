@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct OnlineAccountScreen: View {
-    
-    @State private var email: String = ""
+    var server_address = "http://192.168.1.9:8080"
+    @State private var username: String = ""
     @State private var password: String = ""
     @State private var emailRegistration: String = ""
     @State private var usernameRegistration: String = ""
@@ -28,10 +28,36 @@ struct OnlineAccountScreen: View {
             
             Form {
                 Section {
-                    TextField("Username", text: $email)
+                    TextField("Username", text: $username)
                         .multilineTextAlignment(.center)
                     
-                    Button(action: {}, label: {
+                    Button(action: {
+                        let url = URL(string: server_address + "/api/request-login")
+                        guard let requestURL = url else {fatalError()}
+                        let boundary = "Boundary-\(UUID().uuidString)"
+                        
+                        var request = URLRequest(url: requestURL)
+                        request.httpMethod = "POST"
+                        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+                        
+                        let postString = convertFormField(named: "username", value: username, using: boundary)
+                            + "--\(boundary)--"
+                        
+                        request.httpBody = postString.data(using: String.Encoding.utf8)
+                        
+                        let task = URLSession.shared.dataTask(with: request) {
+                            (data, response, error) in
+                            if let error = error {
+                                print("error in request \(error)")
+                                return
+                            }
+                            
+                            if let data = data, let dataString = String(data: data, encoding: .utf8) {
+                                print("response data: \(dataString)")
+                            }
+                        }
+                        task.resume()
+                    }, label: {
                         Text("Request login password")
                     })
                 }
@@ -40,7 +66,34 @@ struct OnlineAccountScreen: View {
                     TextField("Password", text: $password)
                         .multilineTextAlignment(.center)
                     
-                    Button(action: {}, label: {
+                    Button(action: {
+                        let url = URL(string: server_address + "/api/login")
+                        guard let requestURL = url else {fatalError()}
+                        let boundary = "Boundary-\(UUID().uuidString)"
+                        
+                        var request = URLRequest(url: requestURL)
+                        request.httpMethod = "POST"
+                        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+                        
+                        let postString = convertFormField(named: "username", value: username, using: boundary)
+                            + convertFormField(named: "password", value: password, using: boundary)
+                            + "--\(boundary)--"
+                        
+                        request.httpBody = postString.data(using: String.Encoding.utf8)
+                        
+                        let task = URLSession.shared.dataTask(with: request) {
+                            (data, response, error) in
+                            if let error = error {
+                                print("error in request \(error)")
+                                return
+                            }
+                            
+                            if let data = data, let dataString = String(data: data, encoding: .utf8) {
+                                print("response data: \(dataString)")
+                            }
+                        }
+                        task.resume()
+                    }, label: {
                         Text("Log in")
                     })
                 }
@@ -66,12 +119,48 @@ struct OnlineAccountScreen: View {
                     TextField("Username", text: $usernameRegistration)
                         .multilineTextAlignment(.center)
                     
-                    Button(action: {}, label: {
+                    Button(action: {
+                        let url = URL(string: server_address + "/api/register")
+                        guard let requestURL = url else {fatalError()}
+                        let boundary = "Boundary-\(UUID().uuidString)"
+                        
+                        var request = URLRequest(url: requestURL)
+                        request.httpMethod = "POST"
+                        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+                        
+                        let postString = convertFormField(named: "email", value: emailRegistration, using: boundary)
+                            + convertFormField(named: "username", value: usernameRegistration, using: boundary)
+                            + "--\(boundary)--"
+                        
+                        request.httpBody = postString.data(using: String.Encoding.utf8)
+                        
+                        let task = URLSession.shared.dataTask(with: request) {
+                            (data, response, error) in
+                            if let error = error {
+                                print("error in request \(error)")
+                                return
+                            }
+                            
+                            if let data = data, let dataString = String(data: data, encoding: .utf8) {
+                                print("response data: \(dataString)")
+                            }
+                        }
+                        task.resume()
+                    }, label: {
                         Text("Register")
                     })
                 }
             }
         })
+    }
+    
+    func convertFormField(named name: String, value: String, using boundary: String) -> String {
+        var fieldString = "--\(boundary)\r\n"
+        fieldString += "Content-Disposition: form-data; name=\"\(name)\"\r\n"
+        fieldString += "\r\n"
+        fieldString += "\(value)\r\n"
+        
+        return fieldString
     }
 }
 

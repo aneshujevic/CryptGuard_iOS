@@ -7,11 +7,11 @@ import Foundation
 import SwiftUI
 
 func saveChangesToUserDefaults(passwordList: [String]?) {
-    UserDefaults.standard.set(try! PropertyListEncoder().encode(passwordList), forKey: "pdlist")
+    UserDefaults.standard.setValue(try! PropertyListEncoder().encode(passwordList), forKey: "pdlist")
 }
 
 func deleteDatabaseUserDefaults() {
-    UserDefaults.standard.set(nil, forKey: "pdlist")
+    UserDefaults.standard.removeObject(forKey: "pdlist")
 }
 
 func reEncryptDatabase(databasePassword: String, newDbPassword: String) -> Bool{
