@@ -9,6 +9,9 @@ import SwiftUI
 
 struct OnlineAccountScreen: View {
     var server_address = "http://192.168.1.9:8080"
+    @State private var token: String = ""
+    @State private var showAlert: Bool = false
+    @State private var alertText: String = ""
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var emailRegistration: String = ""
@@ -48,12 +51,14 @@ struct OnlineAccountScreen: View {
                         let task = URLSession.shared.dataTask(with: request) {
                             (data, response, error) in
                             if let error = error {
-                                print("error in request \(error)")
+                                alertText = "Check your username if you are already registered."
+                                showAlert = true
                                 return
                             }
                             
                             if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                print("response data: \(dataString)")
+                                alertText = dataString
+                                showAlert = true
                             }
                         }
                         task.resume()
@@ -84,12 +89,15 @@ struct OnlineAccountScreen: View {
                         let task = URLSession.shared.dataTask(with: request) {
                             (data, response, error) in
                             if let error = error {
-                                print("error in request \(error)")
+                                alertText = "Bad credentials"
+                                showAlert = true
                                 return
                             }
                             
                             if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                print("response data: \(dataString)")
+                                alertText = "Successfully logged in."
+                                showAlert = true
+                                token = String(dataString.split(separator:":")[1])
                             }
                         }
                         task.resume()
@@ -99,11 +107,81 @@ struct OnlineAccountScreen: View {
                 }
                 
                 Section {
-                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+                    Button(action: {
+                        let url = URL(string: server_address + "/api/database")
+                        guard let requestURL = url else {fatalError()}
+                                                
+                        var request = URLRequest(url: requestURL)
+                        request.httpMethod = "GET"
+                        request.setValue("Bearer " + token.dropFirst().dropLast(2), forHTTPHeaderField: "Authorization")
+                                                    
+                        let task = URLSession.shared.dataTask(with: request) {
+                            (data, response, error) in
+                            if let error = error {
+                                alertText = "Couldn't get database from cloud."
+                                showAlert = true
+                                return
+                            }
+                            
+                            if let data = data, let dataString = String(data: data, encoding: .utf8) {
+                                alertText = "Database successfully loaded."
+                                showAlert = true
+                                
+                                deleteDatabaseUserDefaults()
+                                // Importing database
+                                do {
+                                var encryptedPasswordDataList: [String] = []
+                                let encryptedDocumentData = data
+                                let databaseString = String(data: encryptedDocumentData , encoding: .utf8)!
+                                for row in databaseString.split(separator: "\n") {
+                                    _ = row.split(separator: ",")[0]
+                                    let pd = row.split(separator: ",")[1].replacingOccurrences(of: ".", with: "\n")
+                                    encryptedPasswordDataList.append(pd)
+                                    saveChangesToUserDefaults(passwordList: encryptedPasswordDataList)
+                                }
+                                } catch {
+                                    
+                                }
+                            }
+                        }
+                        task.resume()
+                    }, label: {
                         Text("Get online database")
                     })
                     
-                    Button(action: {}, label: {
+                    Button(action: {
+                        let url = URL(string: server_address + "/api/database")
+                        guard let requestURL = url else {fatalError()}
+                        let boundary = "Boundary-\(UUID().uuidString)"
+                        
+                        var request = URLRequest(url: requestURL)
+                        request.httpMethod = "POST"
+                        request.setValue("Bearer " + token.dropFirst().dropLast(2), forHTTPHeaderField: "Authorization")
+                        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+                        
+                        let postString = convertFileData(fieldName: "file", filename: UUID().uuidString, mimeType: "application/octet-stream", fileData: (createDatabaseDocument()?.data)!, boundary: boundary)
+                            
+                        let httpBody = NSMutableData()
+                        httpBody.append(postString)
+                        httpBody.appendString("--\(boundary)--")
+                        
+                        request.httpBody = httpBody as Data
+                        
+                        let task = URLSession.shared.dataTask(with: request) {
+                            (data, response, error) in
+                            if let error = error {
+                                alertText = "Couldn't upload database to the cloud."
+                                showAlert = true
+                                return
+                            }
+                            
+                            if let data = data, let dataString = String(data: data, encoding: .utf8) {
+                                alertText = "Database successfully uploaded."
+                                showAlert = true
+                            }
+                        }
+                        task.resume()
+                    }, label: {
                         Text("Save database online")
                     })
                 }
@@ -137,12 +215,14 @@ struct OnlineAccountScreen: View {
                         let task = URLSession.shared.dataTask(with: request) {
                             (data, response, error) in
                             if let error = error {
-                                print("error in request \(error)")
+                                alertText = "Error in registration. Is you username unique?"
+                                showAlert = true
                                 return
                             }
                             
                             if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                                print("response data: \(dataString)")
+                                alertText = "Successfully registered."
+                                showAlert = true
                             }
                         }
                         task.resume()
@@ -150,6 +230,13 @@ struct OnlineAccountScreen: View {
                         Text("Register")
                     })
                 }
+                .alert(isPresented: $showAlert, content: {
+                    Alert(
+                        title: Text("Alert"),
+                        message: Text(alertText),
+                        dismissButton: .default(Text("OK"))
+                    )}
+                )
             }
         })
     }
@@ -161,6 +248,26 @@ struct OnlineAccountScreen: View {
         fieldString += "\(value)\r\n"
         
         return fieldString
+    }
+    
+    func convertFileData(fieldName: String, filename: String, mimeType: String, fileData: Data, boundary: String) -> Data {
+        let data = NSMutableData()
+        
+        data.appendString("--\(boundary)\r\n")
+        data.appendString("Content-Disposition: form-data; name=\"\(fieldName)\"; filename=\"\(filename)\"\r\n")
+        data.appendString("Content-Type: \(mimeType)\r\n\r\n")
+        data.append(fileData)
+        data.appendString("\r\n")
+        
+        return data as Data
+    }
+}
+
+extension NSMutableData {
+    func appendString(_ string: String) {
+        if let data = string.data(using: .utf8) {
+            self.append(data)
+        }
     }
 }
 

@@ -52,7 +52,7 @@ struct DatabaseScreen: View {
                             if verifyDatabasePassphrase() {
                                 databaseUnlocked = true
                             } else {
-                                showWrongPasswordAlert.toggle()
+                                showWrongPasswordAlert = true
                                 return
                             }
                         } else {
